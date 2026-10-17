@@ -1,0 +1,23 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Synthetic video fixture generator</title>
+<style>body{font:16px system-ui;max-width:720px;margin:40px auto;padding:20px}canvas,video{max-width:100%;display:block;margin:20px 0}button{padding:12px}small{display:block;color:#666}</style>
+<h1>Synthetic decoder test clip</h1><p>This test helper records generated frames into a real WebM file. Download it, then select that file in the app to exercise its video decoder and sampling path.</p>
+<button id="record">Record a 6-second fixture</button><p id="status" role="status"></p><canvas id="scene" width="320" height="180"></canvas><div id="out"></div>
+<small>Generated scene only. This fixture is not recorded driving footage. Local test helper; not a product or contest submission feature.</small>
+<script type="module">
+import {makeDemoFrame} from '../src/demo.js';
+import {withWebmDuration} from './webm-duration.js';
+const button=document.getElementById('record'),canvas=document.getElementById('scene'),status=document.getElementById('status');
+button.onclick=async()=>{
+ button.disabled=true;document.getElementById('out').replaceChildren();
+ const format=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(t=>MediaRecorder.isTypeSupported(t));
+ if(!format){status.textContent='This browser cannot record WebM.';button.disabled=false;return;}
+ const ctx=canvas.getContext('2d');
+ ctx.putImageData(new ImageData(makeDemoFrame(320,180,'clear'),320,180),0,0);
+ const stream=canvas.captureStream(15), chunks=[], recorder=new MediaRecorder(stream,{mimeType:format});
+ const start=performance.now();let timer;
+ const draw=()=>{const t=(performance.now()-start)/1000;const phase=t<1.5?'clear':t<3?'dark':t<4.5?'overexposed':'blurred';ctx.putImageData(new ImageData(makeDemoFrame(320,180,phase),320,180),0,0);status.textContent=`Recording ${phase} · ${t.toFixed(1)} s`;};
+ draw();recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+ recorder.onstop=async()=>{clearInterval(timer);stream.getTracks().forEach(t=>t.stop());try{const raw=new Blob(chunks,{type:format});const blob=await withWebmDuration(raw,(performance.now()-start)/1000);const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='synthetic-decoder-fixture.webm';a.textContent='Download generated WebM';document.getElementById('out').append(a);status.textContent='Ready: generated WebM with finite duration metadata. Download it and select it through the app’s local-video file chooser.';}catch(error){status.textContent=`Fixture error: ${error.message}`;}button.disabled=false;};
+ recorder.start();timer=setInterval(draw,1000/15);setTimeout(()=>recorder.stop(),6000);
+};
+</script></html>

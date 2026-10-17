@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Road video check — code reference map</title>
+<style>
+body{margin:0;background:#f7f8f6;color:#18332a;font:16px/1.6 system-ui,sans-serif}main{max-width:900px;margin:auto;padding:36px 24px}h1{line-height:1.15;letter-spacing:-1px}h2{margin-top:32px;font-size:21px}p{max-width:760px}a{color:#116a73}code{background:#e8ede8;border-radius:4px;padding:2px 5px;overflow-wrap:anywhere;font-size:.9em}.note{color:#58685f;font-size:14px}.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:12px;align-items:center;margin:26px 0}.box{background:white;border:1px solid #d4ded6;border-radius:9px;padding:16px}.box strong{display:block;margin-bottom:8px}.arrow{text-align:center}.steps{padding-left:23px}.steps li{padding-left:8px;margin:18px 0}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:12px;text-align:left;vertical-align:top;border-bottom:1px solid #d4ded6}th{background:#ebf0e9}pre{white-space:pre-wrap;background:#e8ede8;padding:18px;border-radius:7px}a:focus-visible{outline:3px solid #167d89;outline-offset:3px}@media(max-width:650px){.flow{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}main{padding:24px 17px}th,td{padding:9px}}
+</style>
+</head>
+<body><main>
+<p class="note">LOCAL PROTOTYPE · REFERENCE MAP</p>
+<h1>From a local clip to an inspectable flag</h1>
+<p>The app samples a short video, measures its pixels, and links review flags to frames and downloadable reports. There is no model, database, or external service in this path.</p>
+<p class="note">Prepared from implemented source on 2026-10-17. This is a reference route; it does not record a completed learner walkthrough. The map is a snapshot and can drift after code changes.</p>
+<div class="flow" role="img" aria-label="Choose a local file, decode and sample in video.js, measure pixels in analyze.js, then inspect the frame in app.js.">
+<div class="box"><strong>Choose a clip</strong><code>app.js → chooseFile</code><br>Read local metadata.</div><div class="arrow" aria-hidden="true">→</div>
+<div class="box"><strong>Sample and measure</strong><code>video.js → sampleVideo</code><br><code>analyze.js → analyzeFrame</code></div><div class="arrow" aria-hidden="true">→</div>
+<div class="box"><strong>Inspect a moment</strong><code>app.js → showSample</code><br>Frame, metrics, and original clip.</div>
+</div>
+<h2>A three-stop reference route</h2>
+<ol class="steps">
+<li><strong>Input and orchestration:</strong> open <a href="../src/app.js">src/app.js</a> and search for <code>chooseFile</code>, then <code>analyzeLocal</code>. The file stays local through a browser object URL. Each run owns an abort controller so cancellation and source replacement cannot finish an obsolete report.</li>
+<li><strong>Sampling and the decision:</strong> open <a href="../src/video.js">src/video.js</a> at <code>sampleVideo</code>, then <a href="../src/analyze.js">src/analyze.js</a> at <code>analyzeFrame</code> and <code>flagsFor</code>. Sequential seeking supplies real decoded pixels. Three measurements feed explicit thresholds; a low-detail flag is only a prompt for review.</li>
+<li><strong>Visible evidence and export:</strong> return to <code>showSample</code> in <a href="../src/app.js">src/app.js</a>. It draws the measured sample and seeks the original clip. <a href="../src/export.js">src/export.js</a>, at <code>createReport</code>, lists exactly which fields may leave the app in a report.</li>
+</ol>
+<h2>To change this, start here</h2>
+<table><thead><tr><th>Change</th><th>Start here</th><th>Check afterward</th></tr></thead><tbody>
+<tr><td>Labels or explanatory text</td><td><code>index.html</code>; <code>FLAG_LABELS</code> in <code>src/analyze.js</code></td><td>Refresh and inspect the corresponding panel and exported labels.</td></tr>
+<tr><td>A review threshold</td><td><code>DEFAULT_THRESHOLDS</code> in <code>src/analyze.js</code></td><td>Keep visible descriptions consistent; update the boundary expectations in <code>tests/analyze.test.mjs</code>.</td></tr>
+<tr><td>Clip limits or sampling interval</td><td><code>LIMITS</code> and <code>sampleVideo</code> in <code>src/video.js</code></td><td>Update UI and specification, then test sample count, duration, memory use, and report metadata together.</td></tr>
+<tr><td>Report fields</td><td><code>createReport</code> and <code>reportToCSV</code> in <code>src/export.js</code></td><td>Use <code>tests/export.test.mjs</code>; keep raw frames and video bytes out of reports.</td></tr>
+</tbody></table>
+<h2>A practice to reuse</h2>
+<p>The requirements distinguish a generated demo from decoding a real video file. The pixel tests in <a href="../tests/analyze.test.mjs">tests/analyze.test.mjs</a> establish the measurement logic; the separate <a href="../tests/browser-fixture.html">recorded WebM fixture</a> exercises decoding through the actual chooser. These are different claims and need different evidence. On another project, define the visible outcome and its integration boundary before deciding which test proves it.</p>
+<h2>Run it again</h2>
+<p>From the project directory, with Node.js 20 or newer:</p>
+<pre>node serve.mjs
+# Open http://127.0.0.1:8791/
+
+node --test tests/analyze.test.mjs tests/export.test.mjs tests/video.test.mjs</pre>
+<p>No dependency installation or account is needed. Stop the server with Ctrl+C. This map works as a local HTML file without scripts or a network connection; source links are relative to the repository.</p>
+<p class="note">The map is included in the local implementation checkpoint. Learner hands-on feedback and learning wrap-up are still pending.</p>
+</main></body></html>
