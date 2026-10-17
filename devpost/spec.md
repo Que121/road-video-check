@@ -3,7 +3,7 @@ doc: spec
 status: approved
 ---
 
-# Road video quality checker — technical specification
+# Road Video Check — technical specification
 
 Architecture approval: on 2026-10-17 the learner replied “可以” to the proposed local browser-only checker and synthetic demo → local video → reports/test sequence. Plain JavaScript and Canvas implement that choice. No user interview, final review, or learning outcome has been invented.
 
@@ -32,11 +32,11 @@ Reference documentation to verify during implementation:
 
 Command: `node serve.mjs` from this project folder; open `http://127.0.0.1:8791/` in a current desktop browser. Node 20 or newer; no dependencies to install and no API key. The built-in server binds only to loopback. An npm executable is not required.
 
-The Node server has been run locally. A short demo video and a public GitHub repository are required for the event; neither has been created. Public publishing needs separate authorization. Deployment is optional.
+The Node server has been run locally. A short demo video and a public GitHub repository are required for the event. The user has now requested contest submission, including preparation of those delivery materials. Their public URLs and successful submission must be recorded after verification; this document does not claim they already exist. Deployment of a hosted application is optional and is not required for this local tool.
 
 ## Look and Feel
 
-The implemented layout uses ordinary system typography, clear focus states, native file selection, and a responsive grid, following `prd.md > Look and Feel`. Labels and an adjacent legend explain colored timeline marks. Learner visual feedback remains pending.
+The implemented layout uses ordinary system typography, clear focus states, native file selection, and a responsive grid, following `prd.md > Look and Feel`. Labels and an adjacent legend explain colored timeline marks. Initial user feedback prompted a compact workbench and more visible sample selection; a separate hands-on review of the revised design has not been recorded.
 
 ## Components
 

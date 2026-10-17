@@ -1,8 +1,8 @@
-# Road video check
+# Road Video Check
 
-A local browser prototype for finding road-video frames worth a second look. It samples a short clip, measures darkness, bright-pixel fraction, and local detail, then links review flags to frames and time ranges. CSV and JSON exports contain the measurements and settings.
+A browser tool for finding road-video frames worth a second look. It samples a short clip, measures darkness, bright-pixel fraction, and local detail, then links review flags to frames and time ranges. CSV and JSON exports contain the measurements and settings.
 
-The working label is provisional. This repository contains implementation and technical documentation; it is not a completed hackathon entry or the learner's submission description.
+Processing stays on your computer. There is no video upload, account, API key, or cloud service. The application uses deterministic image measurements; it does not run an AI model.
 
 ## Run locally
 
@@ -38,9 +38,11 @@ Reports include the selected file's name, dimensions, duration, sample times, me
 node --test tests/analyze.test.mjs tests/export.test.mjs tests/video.test.mjs
 ```
 
-The dependency-free Node tests cover dark/bright/detail measurements, threshold boundaries, generated-scene behavior, segment grouping across gaps and errors, report serialization, CSV escaping, size/duration rejection, cancellation, media errors, and event-listener cleanup.
+The dependency-free Node tests cover dark/bright/detail measurements, threshold boundaries, generated-scene behavior, segment grouping across gaps and errors, report serialization, CSV escaping, size/duration rejection, cancellation, media errors, and event-listener cleanup. All 20 tests passed at the recorded implementation checkpoint.
 
 To exercise an actual video decoder without a private recording, open **http://127.0.0.1:8791/tests/browser-fixture.html**. Record and download the generated six-second WebM, then select that file through the main app's file chooser. This separate test helper uses MediaRecorder; it is not part of the product UI. Also try a deliberately invalid video, cancel an analysis, and replace its source with the demo.
+
+Recorded desktop browser checks covered the synthetic demo, a decoded local WebM, linked frame selection, useful errors for an invalid video, and downloaded CSV/JSON reports. The [checklist](devpost/checklist.md) distinguishes completed checks from remaining work; mobile-viewport and interactive browser-cancellation checks were not part of that checkpoint.
 
 ## Source guide
 
@@ -53,12 +55,12 @@ To exercise an actual video decoder without a private recording, open **http://1
 - `serve.mjs`: dependency-free loopback static server.
 - `devpost/app-map.html`: an offline reference route through the working code.
 
-## Project status
+## Development and planning
 
-The learner approved the core concept, browser-only architecture, and build sequence on 2026-10-17. The approved [scope](devpost/scope.md), [requirements](devpost/prd.md), [specification](devpost/spec.md), and [checklist](devpost/checklist.md) record the boundaries and actual verification state.
+Road Video Check was created for [Build With AI: Basics](https://learn-ai-basics.devpost.com/) on 2026-10-17. Codex assisted with implementation, tests, and documentation under human direction. The [scope](devpost/scope.md), [requirements](devpost/prd.md), [specification](devpost/spec.md), and [checklist](devpost/checklist.md) record the intended workflow, technical decisions, and verification evidence.
 
-Implementation and mechanical tests are distinct from the learner's hands-on review. Initial feedback led to a more compact workbench and clearer selection feedback; review of that revision remains pending. The learning wrap-up, a public repository, the required short demo video, and the learner-written contest entry also remain pending. No interview, personal reflection, publication, registration, or submission is represented as completed.
+The build followed a small sequence: generated demo, local video analysis, and report export. Initial user feedback led to a more compact workbench and clearer selection feedback. A real decoder check exposed a black first sample at time zero; explicit seeking and waiting for the seek to finish corrected it. The code map links these behaviors to the implementation.
 
-Curriculum: https://github.com/challengepost/learn-ai-basics
+Planning workflow: [Devpost Learn Skill Pack](https://github.com/challengepost/learn-ai-basics).
 
 Original source is available under the [MIT license](LICENSE).

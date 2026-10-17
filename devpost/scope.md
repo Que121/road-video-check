@@ -3,9 +3,9 @@ doc: scope
 status: approved
 ---
 
-# Road video quality checker — approved scope
+# Road Video Check — approved scope
 
-**Approval evidence (2026-10-17):** The learner replied “可以” to the displayed local road-video checker concept, browser-only architecture, and build sequence: synthetic demo → local video → report export and tests. This records that real approval, not a completed interview. The title remains a working label; the learner will supply the public submission name.
+**Initial approval (2026-10-17):** The user approved the local road-video checker concept, browser-only architecture, and build sequence: synthetic demo → local video → report export and tests. The project uses the name Road Video Check. The later request to submit it to Build With AI: Basics authorizes preparation of the required public source repository and demo; it does not imply that submission has occurred.
 
 One line: a local tool that points a researcher to parts of a road-camera recording worth reviewing for poor visual quality.
 
@@ -52,4 +52,4 @@ Camera-specific thresholds, denser sampling, rain or occlusion models, multiple 
 - Learned quality models and model training: unnecessary to test whether inspectable quality flags help.
 - Automatic repair, enhancement, or removal of frames: the tool only identifies candidates for human review.
 - Research benchmarks, private experiments, and unpublished project code: this should be a separate small project with synthetic or user-owned input.
-- Public deployment: a local recording is sufficient to demonstrate this proof of concept.
+- Hosted deployment: a local recording is sufficient to demonstrate this proof of concept. Publishing the source repository and demo for the authorized contest submission is part of delivery; running a public application service is outside this scope.

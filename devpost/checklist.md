@@ -58,7 +58,14 @@ Mechanical checkpoint on 2026-10-17: 20/20 Node tests passed with `node --test t
 
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship.
 
-The learner reported that clicks appeared to have no effect and that the initial page looked unattractive. A revised workbench and clearer selection feedback were implemented in response. The learner has not yet reviewed or approved this revision.
+The user reported that clicks appeared to have no effect and that the initial page looked unattractive. A revised workbench and clearer selection feedback were implemented in response. A separate hands-on review of that revision has not been recorded. The later request to submit the project authorizes contest preparation; it does not establish that those hands-on activities took place.
+
+## Contest Preparation
+
+- The user requested submission to Build With AI: Basics. Required public source publication and a demonstration video are within that request.
+- The project uses the name Road Video Check. Application copy may be prepared with assistance, using real project behavior and development records; personal reflections and completed learning activities must not be invented.
+- The public repository URL, publicly accessible YouTube/Vimeo demo URL, final Devpost form, and successful submission receipt still need verification and recording.
+- Optional curriculum checkpoints above remain an honest activity record. They are not a claim of completed learning or a substitute for the contest's actual submission requirements.
 
 ## Revised Workbench Verification
 

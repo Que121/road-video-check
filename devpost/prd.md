@@ -3,9 +3,9 @@ doc: prd
 status: approved
 ---
 
-# Road video quality checker — product requirements
+# Road Video Check — product requirements
 
-The learner approved the displayed local road-video checker concept, browser-only architecture, and sequence with “可以” on 2026-10-17. This document records the concrete behavior developed from that approved scope. No completed interview or hands-on review is implied. Visual details remain open to user feedback.
+The user approved the local road-video checker concept, browser-only architecture, and sequence on 2026-10-17. This document records the concrete behavior developed from that scope and the subsequent layout revision. It does not imply a completed learning interview or hands-on review of the revised design.
 
 Source: `scope.md > The Core Loop`, `scope.md > The POC Boundary`.
 
@@ -20,11 +20,11 @@ Source: `scope.md > The Core Loop`, `scope.md > The POC Boundary`.
 
 ## Screens and Layout
 
-Proposed single screen: source controls at the top; video or frame preview beside the measurement summary; timeline underneath; flagged intervals and export controls below. On a narrow display, these stack vertically. The learner may change this before approval.
+Single screen: a source rail on the left; a central frame viewer with the sample timeline directly below; a measurement inspector on the right; flagged intervals and export controls below. On a narrow display, these stack vertically. The revised workbench responds to the user's feedback about the initial design and unclear click response.
 
 ## Look and Feel
 
-Proposed, not user-selected: white/off-white background, dark readable text, restrained blue controls, and amber markers for review flags. Color is supplemented by explicit labels. Compact enough to show the clip, measurements, and timeline together on a desktop screen.
+The implemented workbench uses a white/off-white background, dark readable text, restrained colored controls, and amber markers for review flags. Color is supplemented by explicit labels and persistent selected states. The clip, measurements, and timeline fit together on a desktop screen.
 
 ## Features and Behavior
 
@@ -34,7 +34,7 @@ Local files remain in the current browser tab. The page makes no network request
 
 ### Explainable Review Flags
 
-Every sampled frame shows mean luminance, the fraction of very bright pixels, and a detail score. Default thresholds are visible and clearly described as illustrative. "Low detail / possible blur" avoids claiming that a smooth scene is necessarily blurred. Flags are not safety scores. Unflagged frames are labeled "No heuristic flag," not "safe" or "good quality."
+Every sampled frame shows mean encoded-RGB grayscale brightness, the fraction of very bright pixels, and a detail score. Default thresholds are visible and clearly described as illustrative. "Low detail / possible blur" avoids claiming that a smooth scene is necessarily blurred. Flags are not safety scores. Unflagged frames are labeled "No heuristic flag," not "safe" or "good quality."
 
 ### Timeline and Intervals
 
@@ -67,7 +67,7 @@ One inspectable path from local clip or synthetic source to sampled measurements
 
 ## Deferred From the POC
 
-Dataset management, learned artifact detection, configurable camera profiles, video enhancement, public hosting, and bulk processing are outside the proposed boundary.
+Dataset management, learned artifact detection, configurable camera profiles, video enhancement, hosted application service, and bulk processing remain outside the boundary. The public source repository and demonstration video required by the contest are authorized delivery materials.
 
 ## Open Questions
 
