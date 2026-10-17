@@ -58,6 +58,17 @@ Mechanical checkpoint on 2026-10-17: 20/20 Node tests passed with `node --test t
 
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship.
 
+The learner reported that clicks appeared to have no effect and that the initial page looked unattractive. A revised workbench and clearer selection feedback were implemented in response. The learner has not yet reviewed or approved this revision.
+
+## Revised Workbench Verification
+
+- The layout now has a compact masthead, a source rail, a central frame viewer with its timeline directly below, and a measurement inspector. All 32 original DOM IDs were preserved; every application binding resolves.
+- Interval and timeline selections visibly remain active. User-initiated selection reveals an offscreen preview and gives a brief selection cue. The sample heading announces changes; same-file reselection is supported; demo errors appear in the status area.
+- Agent desktop browser QA passed: the demo produced 16 samples; selecting the Dark interval displayed 00:04 with brightness 15.1, bright pixels 0%, and detail 32.4, with matching active interval and timeline states.
+- The generated WebM was imported through the actual chooser and analyzed into seven samples with the expected flags and correct time-zero frame. Browser console checks reported no warnings or errors.
+- All 20 Node tests passed after the interaction changes. Syntax, DOM-binding, and whitespace checks passed. The root agent saved a desktop QA screenshot outside this repository at `outputs/build_with_ai_20261017/qa/road-video-check-redesign.png` in the shared workspace.
+- Mobile CSS is implemented but has not been verified in a mobile viewport. Browser cancellation, revised-design approval, final hands-on review, and learning wrap-up remain pending. This is local verification only; no public push, deployment, or contest submission occurred.
+
 ## Code Tour and App Map
 
 - [ ] Learning activity complete — an actual user-selected practice or code route recorded.

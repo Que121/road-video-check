@@ -32,6 +32,7 @@ function setStatus(text, isError = false) { $('status').textContent = text; $('s
 function runDemo() {
   cancelCurrent(); releaseVideo(); resetResults(); setBusy(false);
   $('run-controls').hidden = true; $('file-input').value = '';
+  $('demo-button').setAttribute('aria-pressed', 'true');
   const width = 320, height = 180;
   state = { source: { kind: 'synthetic', name: 'Synthetic demo — generated frames', duration: DEMO_DURATION, width, height }, samples: [], frames: [], segments: [], selected: 0 };
   for (let time = 0; time < DEMO_DURATION; time++) {
@@ -48,12 +49,13 @@ function runDemo() {
   $('source-metadata').hidden = false;
   $('source-metadata').textContent = 'Synthetic demo · 16 seconds · 320 × 180 · clear → dark → overexposed → blurred';
   setStatus('Demo complete. These are generated frames, not recorded driving footage.');
-  renderResults();
+  renderResults({ reveal: true });
 }
 
 async function chooseFile(file) {
   if (!file) return;
   cancelCurrent(); releaseVideo(); resetResults(); setBusy(false);
+  $('demo-button').setAttribute('aria-pressed', 'false');
   $('run-controls').hidden = true; $('source-metadata').hidden = true;
   state = { source: null, samples: [], segments: [], frames: [], selected: 0 };
   const run = new AbortController(); controller = run;
@@ -103,7 +105,7 @@ async function analyzeLocal() {
     complete = failures === 0;
     setStatus(failures ? `Analysis incomplete: ${failures} sampled frame(s) could not be decoded. Missing samples are marked; exports are disabled. Try re-encoding the clip.` : `Analysis complete · ${state.samples.length} sampled frames. Select a moment to inspect.`, failures > 0);
     $('source-video').hidden = false;
-    renderResults();
+    renderResults({ reveal: true });
   } catch (error) {
     if (error.name === 'AbortError') {
       if (controller === run) setStatus('Analysis canceled. No incomplete report was created. You can analyze the clip again.');
@@ -116,7 +118,7 @@ async function analyzeLocal() {
   }
 }
 
-function renderResults() {
+function renderResults({ reveal = false } = {}) {
   $('results').hidden = false;
   $('csv-button').disabled = !complete; $('json-button').disabled = !complete;
   const flagged = state.samples.filter(s => s.status === 'ok' && s.flags.length).length;
@@ -131,7 +133,7 @@ function renderResults() {
     button.title = `${timeLabel(sample.time)} — ${description}`;
     button.setAttribute('aria-label', button.title);
     button.setAttribute('aria-pressed', 'false');
-    button.addEventListener('click', () => showSample(index));
+    button.addEventListener('click', () => showSample(index, { reveal: true }));
     $('timeline').append(button);
   });
   $('interval-count').textContent = `${state.segments.length} intervals`;
@@ -142,15 +144,19 @@ function renderResults() {
     $('intervals').append(message);
   }
   state.segments.forEach(segment => {
-    const button = document.createElement('button'); button.className = 'interval';
+    const button = document.createElement('button'); button.className = 'interval'; button.type = 'button';
+    button.dataset.firstSample = segment.firstSample;
+    button.dataset.lastSample = segment.lastSample;
+    button.setAttribute('aria-pressed', 'false');
+    button.setAttribute('aria-label', `Inspect ${FLAG_LABELS[segment.flag]} from ${timeLabel(segment.start)} to ${timeLabel(segment.end)}`);
     const label = document.createElement('span'); label.textContent = FLAG_LABELS[segment.flag];
     const time = document.createElement('span'); time.className = 'time'; time.textContent = `${timeLabel(segment.start)} – ${timeLabel(segment.end)} · ${segment.sampleCount} ${segment.sampleCount === 1 ? 'sample' : 'samples'} ↗`;
-    button.append(label, time); button.addEventListener('click', () => showSample(segment.firstSample)); $('intervals').append(button);
+    button.append(label, time); button.addEventListener('click', () => showSample(segment.firstSample, { reveal: true })); $('intervals').append(button);
   });
-  showSample(0);
+  showSample(0, { reveal });
 }
 
-function showSample(index) {
+function showSample(index, { reveal = false } = {}) {
   state.selected = index;
   const sample = state.samples[index];
   $('source-label').textContent = state.source.kind === 'synthetic' ? 'SYNTHETIC DEMO — GENERATED FRAMES' : 'LOCAL VIDEO · SAMPLED FRAME';
@@ -161,6 +167,7 @@ function showSample(index) {
   if (!flagLabels.length) flagLabels.push('No heuristic flag');
   flagLabels.forEach(text => { const span = document.createElement('span'); span.className = `badge${!sample.flags?.length ? ' clear' : ''}${sample.status !== 'ok' ? ' error' : ''}`; span.textContent = text; $('sample-flags').append(span); });
   const canvas = $('preview'); const ctx = canvas.getContext('2d');
+  canvas.setAttribute('aria-label', `Sample at ${timeLabel(sample.time)}: ${flagLabels.join(', ')}`);
   if (state.frames[index]) { const frame = state.frames[index]; canvas.width = frame.width; canvas.height = frame.height; ctx.putImageData(frame, 0, 0); }
   else { ctx.fillStyle = '#17262d'; ctx.fillRect(0, 0, canvas.width, canvas.height); }
   $('frame-note').textContent = state.source.kind === 'synthetic' ? `Generated ${sample.demoPhase} frame. Flags are computed from its pixels.` : `Preview at analysis resolution. Inspect the original clip below for context.`;
@@ -171,12 +178,29 @@ function showSample(index) {
   $('exposure-meter').style.width = sample.status === 'ok' ? `${sample.brightFraction * 100}%` : '0';
   $('detail-meter').style.width = sample.status === 'ok' ? `${Math.min(100, sample.detailVariance / 300 * 100)}%` : '0';
   [...$('timeline').children].forEach((button, i) => button.setAttribute('aria-pressed', String(index === i)));
+  [...$('intervals').querySelectorAll('.interval')].forEach(button => {
+    button.setAttribute('aria-pressed', String(index >= Number(button.dataset.firstSample) && index <= Number(button.dataset.lastSample)));
+  });
   if (state.source.kind === 'local-video' && !controller) {
     $('source-video').pause(); $('source-video').currentTime = Math.min(sample.time, state.source.duration);
   }
+  if (reveal) {
+    const panel = canvas.closest('.preview-panel');
+    panel.classList.remove('selection-flash');
+    void panel.offsetWidth;
+    panel.classList.add('selection-flash');
+    const bounds = canvas.getBoundingClientRect();
+    if (bounds.top < 12 || bounds.bottom > window.innerHeight - 16) {
+      panel.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+    }
+  }
 }
 
-$('demo-button').addEventListener('click', runDemo);
+$('demo-button').addEventListener('click', () => {
+  try { runDemo(); }
+  catch (error) { resetResults(); setStatus(`The demo could not be created: ${error.message}. Please reload and try again.`, true); }
+});
+$('file-input').addEventListener('click', (event) => { event.target.value = ''; });
 $('file-input').addEventListener('change', (event) => chooseFile(event.target.files[0]));
 $('analyze-button').addEventListener('click', analyzeLocal);
 $('cancel-button').addEventListener('click', () => controller?.abort());

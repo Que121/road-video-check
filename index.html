@@ -8,57 +8,86 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main>
-    <header>
-      <div class="eyebrow"><span class="status-dot"></span> LOCAL VIDEO TOOL</div>
-      <h1>Find the frames<br>worth a second look.</h1>
-      <p class="intro">Review dark, overexposed, and low-detail moments in a road-camera clip. See the measurements behind every flag.</p>
-      <div class="privacy">Your video stays in this browser. No upload, account, or API key.</div>
+  <a class="skip-link" href="#review-workspace">Skip to review</a>
+  <main class="app-shell">
+    <header class="masthead">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 36 36" fill="none" aria-hidden="true"><rect width="36" height="36" rx="7" fill="currentColor"/><path d="M9 28 14 8M27 28 22 8M18 8v5m0 4v5m0 4v2" stroke="#FAFBF7" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <div><h1>Road video check<span class="brand-period">.</span></h1><p>Frame review workspace</p></div>
+      </div>
+      <div class="header-note"><span class="local-indicator"><i></i>On-device processing</span><span class="header-rule"></span><span>No upload. No account.</span></div>
     </header>
 
-    <section class="source-panel" aria-labelledby="source-heading">
-      <div><h2 id="source-heading">Start with a clip</h2><p>Up to 2 minutes · 200 MiB · browser-supported video</p></div>
-      <div class="source-actions">
-        <label class="button primary file-button">Choose local video<input id="file-input" type="file" accept="video/*"></label>
-        <button id="demo-button" class="button">Try the synthetic demo <span aria-hidden="true">↗</span></button>
-      </div>
-    </section>
-    <div class="notice" id="status" role="status" aria-live="polite">Choose a local video, or try the synthetic demo to explore the measurements.</div>
-    <div id="source-metadata" class="metadata" hidden></div>
-    <div class="run-controls" id="run-controls" hidden><button id="analyze-button" class="button primary">Analyze at 1 frame / second</button><button id="cancel-button" class="button" hidden>Cancel</button><progress id="progress" max="1" value="0" aria-label="Analysis progress" hidden></progress></div>
-
-    <section id="results" hidden aria-label="Analysis results">
-      <div class="workspace">
-        <div class="preview-panel">
-          <div class="panel-top"><span id="source-label">SAMPLED FRAME</span><span id="frame-time">00:00</span></div>
-          <canvas id="preview" width="640" height="360" aria-label="Selected sampled frame"></canvas>
-          <div class="preview-bottom"><strong id="sample-heading">Sample</strong><div id="sample-flags" class="badges"></div></div>
-          <p id="frame-note" class="muted"></p>
-          <video id="source-video" preload="metadata" playsinline controls hidden></video>
+    <div class="application-layout">
+      <aside class="source-rail" aria-labelledby="source-heading">
+        <div class="rail-heading"><span class="eyebrow">INPUT</span><span class="step-number">01</span></div>
+        <h2 id="source-heading">Choose your source</h2>
+        <p class="rail-intro">Inspect a short road-camera clip, one frame at a time.</p>
+        <div class="source-actions">
+          <label class="button primary file-button"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 13V3m0 0L6 7m4-4 4 4M4 12v5h12v-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Choose local video<input id="file-input" type="file" accept="video/*"></label>
+          <button id="demo-button" class="button demo-button" type="button"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m7 4 9 6-9 6V4Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Try the synthetic demo</button>
         </div>
-        <div class="metrics-panel">
-          <h2>Why this frame?</h2><p class="muted">Measurements at the analysis resolution.</p>
-          <div class="metric"><div><span>Mean brightness</span><strong id="metric-brightness">—</strong></div><p>Dark if below <b>35</b> on a 0–255 scale.</p><div class="meter"><i id="brightness-meter"></i></div></div>
-          <div class="metric"><div><span>Very bright pixels</span><strong id="metric-exposure">—</strong></div><p>Overexposed if more than <b>35%</b> of pixels are at least 245.</p><div class="meter"><i id="exposure-meter"></i></div></div>
-          <div class="metric"><div><span>Detail score</span><strong id="metric-detail">—</strong></div><p>Low detail if below <b>60</b>. Smooth scenes can also trigger this flag.</p><div class="meter"><i id="detail-meter"></i></div></div>
-          <p class="small-note">Illustrative thresholds, not validated quality standards. No heuristic flag does not mean a clip is suitable for driving.</p>
+        <div id="source-metadata" class="metadata" hidden></div>
+        <div class="run-controls" id="run-controls" hidden>
+          <button id="analyze-button" class="button primary" type="button">Analyze at 1 frame / second</button>
+          <button id="cancel-button" class="button cancel-button" type="button" hidden>Cancel analysis</button>
+          <progress id="progress" max="1" value="0" aria-label="Analysis progress" hidden></progress>
         </div>
+        <div class="notice" id="status" role="status" aria-live="polite">Choose a video or open the demo to begin.</div>
+        <div class="rail-details">
+          <h3>Analysis settings</h3>
+          <dl><div><dt>Clip length</dt><dd>≤ 2 min</dd></div><div><dt>File size</dt><dd>≤ 200 MiB</dd></div><div><dt>Sample rate</dt><dd>1 frame / s</dd></div><div><dt>Analysis width</dt><dd>≤ 320 px</dd></div></dl>
+          <p>MP4 or WebM with a codec your browser supports.</p>
+        </div>
+        <div class="privacy-note"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="4.5" y="8.5" width="11" height="8" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M7 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.4"/></svg><p>Your video stays in this tab. Reports contain measurements, never footage.</p></div>
+      </aside>
+
+      <div class="review-workspace" id="review-workspace" tabindex="-1">
+        <div class="workspace-heading"><div><span class="eyebrow">REVIEW</span><h2>Frame inspection</h2></div><span class="workspace-caption">See the frame. Check the evidence.</span></div>
+        <section class="empty-state" aria-label="No video selected">
+          <div class="empty-viewer">
+            <svg viewBox="0 0 72 52" fill="none" aria-hidden="true"><path d="M8 17V7h12m32 0h12v10M8 35v10h12m32 0h12V35" stroke="currentColor" stroke-width="1.5"/><path d="m28 16 17 10-17 10V16Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            <h3>A closer look starts here.</h3><p>Open a local clip, or try the generated demo.<br>Your sampled frame and its measurements will appear here.</p>
+          </div>
+          <div class="empty-guidance"><span><i>01</i>Choose a source</span><span><i>02</i>Inspect flagged moments</span><span><i>03</i>Export measurements</span></div>
+        </section>
+
+        <section id="results" hidden aria-label="Analysis results">
+          <div class="analysis-grid">
+            <div class="viewer-column">
+              <div class="preview-panel">
+                <div class="panel-top"><span id="source-label">SAMPLED FRAME</span><span id="frame-time">00:00</span></div>
+                <canvas id="preview" width="640" height="360" aria-label="Selected sampled frame"></canvas>
+                <div class="preview-bottom"><strong id="sample-heading" aria-live="polite" aria-atomic="true">Sample</strong><div id="sample-flags" class="badges"></div></div>
+                <p id="frame-note" class="frame-note"></p>
+              </div>
+              <section class="timeline-panel" aria-labelledby="timeline-heading">
+                <div class="section-heading"><div><h2 id="timeline-heading">Sample timeline</h2><p id="sample-summary"></p></div><div class="legend"><span><i class="legend-clear"></i>No flag</span><span><i class="legend-flag"></i>Review</span><span><i class="legend-error"></i>Missing</span></div></div>
+                <div id="timeline" class="timeline" role="group" aria-label="Select a sampled frame"></div>
+                <div class="timeline-axis"><span>00:00</span><span id="end-time"></span></div>
+                <p class="sampling-note">Select a bar to inspect that second. Brief events between samples may be missed.</p>
+              </section>
+              <div class="original-panel"><div class="section-heading"><h2>Original clip</h2><span class="muted">Linked to the selected sample</span></div><video id="source-video" preload="metadata" playsinline controls hidden></video></div>
+            </div>
+            <aside class="metrics-panel" aria-labelledby="metrics-heading">
+              <div class="inspector-heading"><span class="eyebrow">INSPECTOR</span><span class="inspector-dot" aria-hidden="true"></span></div>
+              <h2 id="metrics-heading">Frame measurements</h2>
+              <p class="muted">At the analysis resolution.</p>
+              <div class="metric"><div class="metric-label"><span>Mean brightness</span><span class="metric-unit">/ 255</span></div><strong id="metric-brightness">—</strong><div class="meter"><i id="brightness-meter"></i></div><p>Dark below <b>35</b>.</p></div>
+              <div class="metric"><div class="metric-label"><span>Very bright pixels</span><span class="metric-unit">%</span></div><strong id="metric-exposure">—</strong><div class="meter exposure"><i id="exposure-meter"></i></div><p>Overexposed above <b>35%</b>, counting pixels at 245 or brighter.</p></div>
+              <div class="metric"><div class="metric-label"><span>Detail score</span><span class="metric-unit">VAR.</span></div><strong id="metric-detail">—</strong><div class="meter detail"><i id="detail-meter"></i></div><p>Low detail below <b>60</b>. Smooth scenes can trigger it too.</p></div>
+              <div class="inspector-note"><span aria-hidden="true">i</span><p>Review aids, not a safety score. These thresholds are illustrative.</p></div>
+            </aside>
+          </div>
+          <section class="intervals-panel" aria-labelledby="intervals-heading">
+            <div class="section-heading"><div><h2 id="intervals-heading">Flagged intervals</h2><p>Consecutive samples with the same review flag.</p></div><span id="interval-count" class="count"></span></div>
+            <div id="intervals"></div>
+          </section>
+          <section class="export-panel" aria-label="Export results"><div><h2>Export this review</h2><p>Measurements, thresholds, and sampling settings. No video or images.</p></div><div class="export-actions"><button id="csv-button" class="button" type="button" disabled>Download CSV <span aria-hidden="true">↓</span></button><button id="json-button" class="button" type="button" disabled>Download JSON <span aria-hidden="true">↓</span></button></div></section>
+        </section>
+        <footer><span>LOCAL ANALYSIS / ORIGINAL PROTOTYPE</span><span>Flags guide review. They do not measure driving safety.</span></footer>
       </div>
-
-      <section class="timeline-panel" aria-labelledby="timeline-heading">
-        <div class="section-heading"><div><h2 id="timeline-heading">A second-by-second view</h2><p id="sample-summary"></p></div><div class="legend"><span><i class="legend-clear"></i>No flag</span><span><i class="legend-flag"></i>Review</span><span><i class="legend-error"></i>Missing</span></div></div>
-        <div id="timeline" class="timeline" role="group" aria-label="Select a sampled frame"></div>
-        <div class="timeline-axis"><span>00:00</span><span id="end-time"></span></div>
-        <p class="small-note">One frame per second. Flags describe sampled frames; brief events between them can be missed.</p>
-      </section>
-
-      <section class="intervals-panel" aria-labelledby="intervals-heading">
-        <div class="section-heading"><div><h2 id="intervals-heading">Moments to inspect</h2><p>Adjacent flagged samples, grouped by the reason for review.</p></div><span id="interval-count" class="count"></span></div>
-        <div id="intervals"></div>
-      </section>
-      <section class="export-panel"><div><h2>Keep the measurements</h2><p>Reports include thresholds, sampling settings, and source labels. Video and images are excluded.</p></div><div class="source-actions"><button id="csv-button" class="button" disabled>Download CSV</button><button id="json-button" class="button" disabled>Download JSON</button></div></section>
-    </section>
-    <footer>Road video check · A small, local proof of concept.<span>Flags are review aids. They do not measure driving safety.</span></footer>
+    </div>
   </main>
   <script type="module" src="src/app.js"></script>
 </body>

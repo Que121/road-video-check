@@ -57,7 +57,7 @@ To exercise an actual video decoder without a private recording, open **http://1
 
 The learner approved the core concept, browser-only architecture, and build sequence on 2026-10-17. The approved [scope](devpost/scope.md), [requirements](devpost/prd.md), [specification](devpost/spec.md), and [checklist](devpost/checklist.md) record the boundaries and actual verification state.
 
-Implementation and mechanical tests are distinct from the learner's hands-on review. Learner feedback, the learning wrap-up, a public repository, the required short demo video, and the learner-written contest entry remain pending. No interview, personal reflection, publication, registration, or submission is represented as completed.
+Implementation and mechanical tests are distinct from the learner's hands-on review. Initial feedback led to a more compact workbench and clearer selection feedback; review of that revision remains pending. The learning wrap-up, a public repository, the required short demo video, and the learner-written contest entry also remain pending. No interview, personal reflection, publication, registration, or submission is represented as completed.
 
 Curriculum: https://github.com/challengepost/learn-ai-basics
 
