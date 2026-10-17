@@ -49,6 +49,8 @@ The slice checkboxes below track implementation and mechanical verification only
 
 ## Hands-on Checkpoints
 
+Mechanical checkpoint on 2026-10-17: 20/20 Node tests passed with `node --test tests/analyze.test.mjs tests/export.test.mjs tests/video.test.mjs`. Integrated implementation commit: `1fa2b61`. Browser evidence above is agent verification, not learner feedback. No public push or deployment has occurred.
+
 - [ ] Early usable behavior explored after slice 1, with actual learner feedback recorded.
 - [ ] Final kick-the-tires exploration and feedback completed.
 
